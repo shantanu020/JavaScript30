@@ -49,6 +49,7 @@
   </div>
 
   <audio data-key="65" src="sounds/clap.wav"></audio>
+  <!-- before any user-defined attribute we need to use 'data-' -->
   <audio data-key="83" src="sounds/hihat.wav"></audio>
   <audio data-key="68" src="sounds/kick.wav"></audio>
   <audio data-key="70" src="sounds/openhat.wav"></audio>
@@ -59,6 +60,35 @@
   <audio data-key="76" src="sounds/tink.wav"></audio>
 
 <script>
+  // we have to add keydown event so it will be applied on window
+  
+  function playAudio(e){
+    // select keys from the keyCode 
+    const audio=document.querySelector(`audio[data-key="${e.keyCode}"]`); 
+    const key=document.querySelector(`.key[data-key="${e.keyCode}"]`);
+    if(!audio)return; //stop the function from running all together
+    audio.currentTime=0;
+    audio.play();
+    // adding transition class on key which is pressed
+    key.classList.add('playing');
+    // setTimeout(function(){},0.07)
+    //setTimeout will be not a good approach here as we shouldn't hardcode transition time
+  }
+  function removeTransition(e){
+    // console.log(e); //that's lot of transition
+    // here we need to select only transform transition 
+    if(e.propertyName!=='transform') return;
+    // to check what is this just log it
+    this.classList.remove('playing')
+    // in case of event listener this is the object that triggered the event
+    // removing the class playing on which transition is applied
+  }
+  const keys=document.querySelectorAll('.key');
+  // we can't add event listener to a nodeList
+  keys.forEach(key=>key.addEventListener('transitionend',removeTransition))
+  window.addEventListener('keydown',playAudio);
+
+ 
 
 </script>
 
